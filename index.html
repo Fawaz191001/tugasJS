@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Pegawai</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+
+      th {
+        background-color: darkorange;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Pegawai</th>
+          <th>Jabatan</th>
+          <th>Status</th>
+          <th>Gaji Pokok</th>
+          <th>Total Gaji</th>
+        </tr>
+      </thead>
+      <tbody id="data-pegawai">
+        <!-- Data Pegawai akan ditambahkan di sini melalui JavaScript -->
+      </tbody>
+      <tfoot>
+        <tr bgcolor="darkorange">
+          <td colspan="4">Total Gaji Semua Pegawai</td>
+          <td id="total-gaji">0</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <script>
+      // Fungsi untuk menghitung gaji total
+      function hitungGajiTotal(gapok, jabatan, status) {
+        // Hitung tunjangan jabatan
+        var tunjanganJabatan = 0.15 * gapok;
+        // Hitung BPJS
+        var bpjs = 0.1 * gapok;
+        // Hitung tunjangan keluarga (ternary)
+        var tunjanganKeluarga = status === 'Menikah' ? 0.2 * gapok : 0;
+
+        // Hitung total gaji
+        var totalGaji = gapok + tunjanganJabatan + tunjanganKeluarga - bpjs;
+        return totalGaji;
+      }
+
+      // Data pegawai
+      var pegawai = [{ nama: 'Ridwan', jabatan: 'Manager', status: 'Menikah' }];
+
+      var totalSemuaGaji = 0;
+
+      // Menambahkan data pegawai ke dalam tabel
+      var tbody = document.getElementById('data-pegawai');
+      pegawai.forEach(function (p) {
+        var row = document.createElement('tr');
+        var gapok;
+
+        // Hitung gaji pokok berdasarkan jabatan
+        switch (p.jabatan) {
+          case 'Manager':
+            gapok = 15000000;
+            break;
+          case 'Asisten Manager':
+            gapok = 10000000;
+            break;
+          case 'Staff':
+            gapok = 5000000;
+            break;
+          default:
+            gapok = 0;
+        }
+
+        // Hitung total gaji
+        var totalGaji = hitungGajiTotal(gapok, p.jabatan, p.status);
+        totalSemuaGaji += totalGaji;
+
+        // Tambahkan data pegawai ke dalam baris
+        row.innerHTML = '<td>' + p.nama + '</td><td>' + p.jabatan + '</td><td>' + p.status + '</td><td>' + gapok.toLocaleString() + '</td><td>' + totalGaji.toLocaleString() + '</td>';
+        tbody.appendChild(row);
+      });
+
+      // Memperbarui total gaji semua pegawai
+      document.getElementById('total-gaji').textContent = totalSemuaGaji.toLocaleString();
+    </script>
+  </body>
+</html>
